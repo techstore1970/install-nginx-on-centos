@@ -5,8 +5,11 @@ yum -y install epel-release
 yum -y install wget make gcc gcc-c++ automake gd-devel pcre pcre-devel openssl openssl-devel zlib zlib-devel vim
 
 cd /usr/local/src
+
 wget https://nginx.org/download/nginx-1.16.1.tar.gz
+
 tar xzvf nginx-1.16.1.tar.gz
+
 cd /usr/local/src/nginx-1.16.1
 
 # 创建php-fpm组
@@ -43,7 +46,25 @@ make
 
 make install
 
-wget 
+#nginx 主配置文件
+wget https://github.com/techstore1970/install-nginx-on-centos/raw/master/nginx.conf
+rm -rf /usr/local/nginx/conf/nginx.conf
+cp nginx.conf /usr/local/nginx/conf/
 
+# nginx 虚拟服务配置文件
+wget https://github.com/techstore1970/install-nginx-on-centos/raw/master/server.conf
+mkdir /usr/local/nginx/vhost
+cp server.conf /usr/local/nginx/vhost/
 
+# 注册系统服务
+wget https://github.com/techstore1970/install-nginx-on-centos/raw/master/nginx.service
+cp nginx.service /usr/lib/systemd/system/
 
+# 更新系统配置
+sudo systemctl daemon-reload
+
+# 配置开机启动
+sudo systemctl enable nginx
+
+# 启动 nginx.service
+sudo systemctl start nginx
